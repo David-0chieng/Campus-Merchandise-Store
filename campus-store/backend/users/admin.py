@@ -9,5 +9,5 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_active')
     search_fields = ('username', 'email', 'full_name', 'student_id')
     fieldsets = UserAdmin.fieldsets + (
-        ('Campus Info', {'fields': ('full_name', 'student_id', 'phone_number', 'delivery_location')}),
+        ('Account Info', {'fields': ('full_name', 'student_id', 'phone_number', 'delivery_location')}),
     )

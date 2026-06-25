@@ -14,9 +14,8 @@ const Checkout = () => {
 
   const [form, setForm] = useState({
     full_name: user?.full_name || '',
-    student_id: user?.student_id || '',
     email: user?.email || '',
-    phone_number: '',
+    phone_number: user?.phone_number || '',
     delivery_location: '',
   });
   const [loading, setLoading] = useState(false);
@@ -97,42 +96,35 @@ const Checkout = () => {
           <div className="checkout-form__grid">
             <div className="form-group">
               <label>Full Name *</label>
-              <input name="full_name" type="text" placeholder="Kofi Mensah"
+              <input name="full_name" type="text" placeholder="John Kamau"
                 value={form.full_name} onChange={handleChange} required />
               {fieldError('full_name') && <span className="error-msg">{fieldError('full_name')}</span>}
             </div>
 
             <div className="form-group">
-              <label>Student ID *</label>
-              <input name="student_id" type="text" placeholder="SPH/2024/001"
-                value={form.student_id} onChange={handleChange} required />
-              {fieldError('student_id') && <span className="error-msg">{fieldError('student_id')}</span>}
-            </div>
-
-            <div className="form-group">
               <label>Email Address *</label>
-              <input name="email" type="email" placeholder="kofi@sph.edu.gh"
+              <input name="email" type="email" placeholder="john@example.com"
                 value={form.email} onChange={handleChange} required />
               {fieldError('email') && <span className="error-msg">{fieldError('email')}</span>}
             </div>
 
             <div className="form-group">
               <label>Phone Number *</label>
-              <input name="phone_number" type="tel" placeholder="+233 24 000 0000"
+              <input name="phone_number" type="tel" placeholder="+254 712 000 000"
                 value={form.phone_number} onChange={handleChange} required />
               {fieldError('phone_number') && <span className="error-msg">{fieldError('phone_number')}</span>}
             </div>
 
             <div className="form-group form-group--full">
-              <label>Delivery Location / Hall of Residence *</label>
-              <textarea name="delivery_location" placeholder="e.g. Commonwealth Hall, Room 304, SPH Campus"
+              <label>Delivery Address *</label>
+              <textarea name="delivery_location" placeholder="e.g. Nyali Estate, Apartment 12B, Mombasa"
                 value={form.delivery_location} onChange={handleChange} required rows={3} />
               {fieldError('delivery_location') && <span className="error-msg">{fieldError('delivery_location')}</span>}
             </div>
           </div>
 
           <button type="submit" className="btn btn-primary checkout-form__submit" disabled={loading || cartItems.length === 0}>
-            {loading ? 'Placing Order...' : `Place Order — GHS ${cartTotal.toFixed(2)}`}
+            {loading ? 'Placing Order...' : `Place Order — KSh ${cartTotal.toFixed(2)}`}
           </button>
         </form>
 

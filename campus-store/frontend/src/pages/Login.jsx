@@ -38,7 +38,7 @@ const Login = () => {
         <div className="auth-page__branding">
           <div className="auth-page__logo">SPH</div>
           <h2>Welcome Back</h2>
-          <p>Log in to access your SPH Campus Store account and order history.</p>
+          <p>Log in to access your Swahilipot Hub Merchandise account and order history.</p>
         </div>
       </div>
 

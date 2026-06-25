@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
+@import "tailwindcss";
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -30,6 +32,23 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* shadcn/ui compatible CSS variables */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #1a1a2e;
+  --muted: #f1f5f9;
+  --muted-foreground: #6b6b6b;
+  --accent-foreground: #1a1a2e;
+  --destructive: #c62828;
+  --destructive-foreground: #ffffff;
+  --input: #e0dbd0;
+  --ring: #c9a84c;
+  --radius: 0.5rem;
 }
 
 html { scroll-behavior: smooth; }
@@ -212,4 +231,14 @@ ul, ol { list-style: none; }
 .page-wrapper {
   min-height: calc(100vh - 80px);
   padding: 40px 0;
+}
+
+/* Flip Card 3D Effects */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

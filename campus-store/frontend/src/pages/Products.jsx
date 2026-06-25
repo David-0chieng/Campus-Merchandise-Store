@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { FiFilter, FiX, FiChevronDown } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
-import LoadingSpinner from '../components/LoadingSpinner';
+import AnimatedLoadingSkeleton from '../components/ui/animated-loading-skeleton';
 import EmptyState from '../components/EmptyState';
 import { productService } from '../services/api';
 import './Products.css';
@@ -75,8 +75,8 @@ const Products = () => {
       {/* Page Header */}
       <div className="products-page__header">
         <div className="container">
-          <h1>SPH Merchandise</h1>
-          <p>Official campus-branded products for students</p>
+          <h1>Swahilipot Hub Merchandise</h1>
+          <p>Quality lifestyle products — Clothes, bags, accessories, and shoes</p>
           <SearchBar
             defaultValue={search}
             onSearch={(q) => setParam('search', q)}
@@ -162,7 +162,7 @@ const Products = () => {
           </div>
 
           {loading ? (
-            <LoadingSpinner text="Loading products..." />
+            <AnimatedLoadingSkeleton />
           ) : products.length === 0 ? (
             <EmptyState
               icon="🔍"

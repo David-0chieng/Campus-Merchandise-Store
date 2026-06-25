@@ -1,52 +1,82 @@
+/* =============================================
+   CATEGORY CARD — Image-based modern card
+   ============================================= */
+
 .category-card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 28px 20px;
-  background: var(--white);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  border: 1.5px solid transparent;
-  text-align: center;
-  transition: all var(--transition);
+  justify-content: flex-end;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .category-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+}
+
+.category-card__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-card__bg {
+  transform: scale(1.08);
+}
+
+.category-card__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.category-card__content {
+  position: relative;
+  z-index: 2;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .category-card__icon {
-  font-size: 2.2rem;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--off-white);
-  border-radius: 50%;
-  transition: background var(--transition);
+  font-size: 1.8rem;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
 }
 
-.category-card:hover .category-card__icon {
-  background: rgba(201,168,76,0.12);
+.category-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .category-card__name {
-  font-family: 'Playfair Display', serif;
   font-size: 1rem;
-  color: var(--primary);
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
-.category-card__link {
-  display: flex;
+.category-card__cta {
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  color: var(--accent-dark);
+  color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  transition: gap 0.2s ease;
+}
+
+.category-card:hover .category-card__cta {
+  gap: 7px;
 }

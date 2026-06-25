@@ -11,6 +11,7 @@ import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
+import LoginFlipCard from './pages/LoginFlipCard';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
 import Profile from './pages/Profile';
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/products/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/login-flip" element={<LoginFlipCard />} />
             <Route path="/register" element={<Register />} />
             <Route path="/checkout" element={
               <ProtectedRoute><Checkout /></ProtectedRoute>

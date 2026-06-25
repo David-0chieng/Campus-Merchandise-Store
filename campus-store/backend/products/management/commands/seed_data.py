@@ -32,7 +32,7 @@ class Command(BaseCommand):
         products_data = [
             {
                 'name': 'SPH Classic Hoodie',
-                'description': 'Stay warm and stylish with the SPH Classic Hoodie. Made from premium fleece material, this hoodie features the iconic SPH logo embroidered on the chest. Perfect for cool campus evenings and study sessions.',
+                'description': 'Stay warm and stylish with this classic hoodie. Made from premium fleece material featuring an embroidered logo on the chest. Perfect for cool evenings and casual wear.',
                 'price': 45.00,
                 'stock': 50,
                 'category': categories['apparel'],
@@ -41,7 +41,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'SPH Premium Hoodie',
-                'description': 'Upgrade your campus wardrobe with the SPH Premium Hoodie. Crafted from heavyweight cotton-polyester blend with a stylish kangaroo pocket and adjustable drawstring hood. Features large SPH print on back.',
+                'description': 'Upgrade your wardrobe with this premium hoodie. Crafted from heavyweight cotton-polyester blend with a stylish kangaroo pocket and adjustable drawstring hood. Features large print on back.',
                 'price': 60.00,
                 'stock': 30,
                 'category': categories['apparel'],
@@ -50,7 +50,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'SPH Classic T-Shirt',
-                'description': 'A wardrobe essential for every SPH student. This classic tee is made from 100% combed cotton, offering superior softness and durability. Available in multiple colors with the SPH crest printed on the chest.',
+                'description': 'A wardrobe essential. This classic tee is made from 100% combed cotton, offering superior softness and durability. Available in multiple colors with the crest printed on the chest.',
                 'price': 20.00,
                 'stock': 100,
                 'category': categories['apparel'],
@@ -68,7 +68,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'SPH Backpack',
-                'description': 'The ultimate campus companion. This spacious SPH Backpack features a padded laptop compartment, multiple organizer pockets, and water-resistant material. Ergonomic straps for all-day comfort.',
+                'description': 'The ultimate daily companion. This spacious backpack features a padded laptop compartment, multiple organizer pockets, and water-resistant material. Ergonomic straps for all-day comfort.',
                 'price': 55.00,
                 'stock': 40,
                 'category': categories['bags'],
@@ -77,7 +77,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'SPH Canvas Tote Bag',
-                'description': 'Eco-friendly and stylish. The SPH Canvas Tote Bag is made from heavy-duty canvas with reinforced handles. Perfect for books, groceries, or a day out. Features the SPH motto printed on the side.',
+                'description': 'Eco-friendly and stylish. Made from heavy-duty canvas with reinforced handles. Perfect for shopping, books, or a day out. Features printed motto on the side.',
                 'price': 15.00,
                 'stock': 60,
                 'category': categories['bags'],
@@ -104,7 +104,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'SPH Premium Notebook',
-                'description': 'Capture every idea with the SPH Premium Notebook. Features 200 pages of acid-free paper, a lay-flat binding, and a hardcover with the SPH emblem. Includes a ribbon bookmark and elastic closure.',
+                'description': 'Capture every idea with this premium notebook. Features 200 pages of acid-free paper, lay-flat binding, and a hardcover with the SPH emblem. Includes a ribbon bookmark and elastic closure.',
                 'price': 14.00,
                 'stock': 90,
                 'category': categories['stationery'],
@@ -113,7 +113,7 @@ class Command(BaseCommand):
             },
             {
                 'name': 'SPH Sticker Pack',
-                'description': 'Personalize your laptop, water bottle, or notebook with the SPH Sticker Pack. Includes 10 premium vinyl stickers featuring various SPH logos, mascots, and campus landmarks. Waterproof and UV-resistant.',
+                'description': 'Personalize your laptop, water bottle, or notebook with the SPH Sticker Pack. Includes 10 premium vinyl stickers featuring various logos and designs. Waterproof and UV-resistant.',
                 'price': 8.00,
                 'stock': 200,
                 'category': categories['accessories'],

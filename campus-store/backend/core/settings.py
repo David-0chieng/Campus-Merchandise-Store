@@ -4,7 +4,7 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-sph-campus-store-secret-key-change-in-production'
+SECRET_KEY = 'django-insecure-swahilipot-hub-merchandise-secret-key-change-in-production'
 
 DEBUG = True
 

@@ -24,7 +24,7 @@ const CartItem = ({ item }) => {
             <span className="cart-item__category">{item.category_name}</span>
           )}
           <h4 className="cart-item__name">{item.name}</h4>
-          <p className="cart-item__price-unit">GHS {parseFloat(item.price).toFixed(2)} each</p>
+          <p className="cart-item__price-unit">KSh {parseFloat(item.price).toFixed(2)} each</p>
         </div>
 
         <div className="cart-item__controls">
@@ -35,7 +35,7 @@ const CartItem = ({ item }) => {
             onDecrease={() => updateQuantity(item.id, item.quantity - 1)}
           />
           <span className="cart-item__subtotal">
-            GHS {(parseFloat(item.price) * item.quantity).toFixed(2)}
+            KSh {(parseFloat(item.price) * item.quantity).toFixed(2)}
           </span>
           <button
             className="cart-item__remove"

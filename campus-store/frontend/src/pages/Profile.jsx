@@ -66,7 +66,6 @@ const Profile = () => {
             <div className="profile-header__info">
               <h1>{user?.full_name || user?.username}</h1>
               <p>{user?.email}</p>
-              {user?.student_id && <span className="profile-header__id">ID: {user.student_id}</span>}
             </div>
           </div>
         </div>
@@ -141,15 +140,11 @@ const Profile = () => {
                     <span>{user?.email || '—'}</span>
                   </div>
                   <div className="profile-info-item">
-                    <span className="label">Student ID</span>
-                    <span>{user?.student_id || '—'}</span>
-                  </div>
-                  <div className="profile-info-item">
                     <span className="label">Phone</span>
                     <span>{user?.phone_number || '—'}</span>
                   </div>
                   <div className="profile-info-item profile-info-item--full">
-                    <span className="label">Delivery Location</span>
+                    <span className="label">Delivery Address</span>
                     <span>{user?.delivery_location || '—'}</span>
                   </div>
                 </div>
@@ -189,13 +184,13 @@ const Profile = () => {
                         {order.items?.map((item) => (
                           <div key={item.id} className="order-card__item">
                             <span>{item.product_name} × {item.quantity}</span>
-                            <span>GHS {parseFloat(item.subtotal).toFixed(2)}</span>
+                            <span>KSh {parseFloat(item.subtotal).toFixed(2)}</span>
                           </div>
                         ))}
                       </div>
                       <div className="order-card__footer">
                         <span>Delivery to: {order.delivery_location}</span>
-                        <span className="order-card__total">GHS {parseFloat(order.total_price).toFixed(2)}</span>
+                        <span className="order-card__total">KSh {parseFloat(order.total_price).toFixed(2)}</span>
                       </div>
                     </div>
                   ))}
@@ -222,7 +217,7 @@ const Profile = () => {
                 <div className="settings-item">
                   <div>
                     <h4>Newsletter</h4>
-                    <p>Get exclusive deals and campus merchandise news</p>
+                    <p>Get exclusive deals and new merchandise updates</p>
                   </div>
                   <label className="toggle">
                     <input type="checkbox" />

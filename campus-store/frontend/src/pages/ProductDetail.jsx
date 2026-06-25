@@ -84,7 +84,7 @@ const ProductDetail = () => {
             )}
 
             <h1 className="product-detail__name">{product.name}</h1>
-            <p className="product-detail__price">GHS {parseFloat(product.price).toFixed(2)}</p>
+            <p className="product-detail__price">KSh {parseFloat(product.price).toFixed(2)}</p>
 
             <div className="product-detail__stock-row">
               <FiPackage size={15} />
