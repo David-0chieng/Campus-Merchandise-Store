@@ -1,21 +1,31 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Eye, Heart, Star } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import './ProductCard.css';
 
 const PLACEHOLDER = 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
-  const [wishlisted, setWishlisted] = useState(false);
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const [addedFlash, setAddedFlash] = useState(false);
+  const wishlisted = isWishlisted(product.id);
 
   const handleAddToCart = () => {
     if (product.stock === 0) return;
     addToCart(product);
     setAddedFlash(true);
+    toast.success(`${product.name} added to cart`);
     setTimeout(() => setAddedFlash(false), 1200);
+  };
+
+  const handleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
   };
 
   return (
@@ -43,21 +53,18 @@ const ProductCard = ({ product }) => {
           )}
         </div>
 
-        {/* Wishlist btn */}
+        {/* Wishlist button */}
         <button
           className={`product-card__wishlist ${wishlisted ? 'product-card__wishlist--active' : ''}`}
-          onClick={() => setWishlisted(!wishlisted)}
-          aria-label="Add to wishlist"
+          onClick={handleWishlist}
+          aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <Heart size={16} fill={wishlisted ? '#c9a84c' : 'none'} />
+          <Heart size={16} fill={wishlisted ? '#c9a84c' : 'none'} stroke={wishlisted ? '#c9a84c' : 'currentColor'} />
         </button>
 
         {/* Hover overlay */}
         <div className="product-card__overlay">
-          <Link
-            to={`/products/${product.id}`}
-            className="product-card__overlay-btn"
-          >
+          <Link to={`/products/${product.id}`} className="product-card__overlay-btn">
             <Eye size={15} />
             Quick View
           </Link>

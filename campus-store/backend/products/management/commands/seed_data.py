@@ -1,135 +1,262 @@
+"""
+Management command to seed the database with sample SPH merchandise data.
+
+Usage:
+    python manage.py seed_data
+    python manage.py seed_data --flush   # clears existing data first
+"""
 from django.core.management.base import BaseCommand
-from products.models import Product, Category
+from django.contrib.auth import get_user_model
+from products.models import Category, Product
+
+User = get_user_model()
+
+CATEGORIES = [
+    {'name': 'T-Shirts', 'slug': 't-shirts', 'description': 'SPH branded tees for everyday wear'},
+    {'name': 'Hoodies', 'slug': 'hoodies', 'description': 'Premium hoodies and sweatshirts'},
+    {'name': 'Tote Bags', 'slug': 'tote-bags', 'description': 'Eco-friendly tote bags'},
+    {'name': 'Caps & Hats', 'slug': 'caps-hats', 'description': 'Caps, beanies and bucket hats'},
+    {'name': 'Accessories', 'slug': 'accessories', 'description': 'Stickers, pins and wristbands'},
+    {'name': 'Shoes', 'slug': 'shoes', 'description': 'SPH branded footwear'},
+]
+
+PRODUCTS = [
+    # T-Shirts
+    {
+        'name': 'SPH Classic Logo Tee',
+        'description': 'The iconic Swahilipot Hub logo on a premium 100% cotton tee. Comfortable, durable, and perfect for daily wear. Available in navy and black.',
+        'price': '1200.00',
+        'stock': 50,
+        'category_slug': 't-shirts',
+        'is_featured': True,
+        'is_new_arrival': False,
+    },
+    {
+        'name': 'SPH Coastal Vibes Tee',
+        'description': "Inspired by the beauty of Mombasa's coastline. A relaxed-fit tee with a stunning coastal graphic on the back.",
+        'price': '1350.00',
+        'stock': 30,
+        'category_slug': 't-shirts',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Community Tee',
+        'description': 'Wear your community pride. This tee features the SPH community motto printed on the chest. Unisex cut.',
+        'price': '1100.00',
+        'stock': 45,
+        'category_slug': 't-shirts',
+        'is_featured': True,
+        'is_new_arrival': False,
+    },
+    {
+        'name': 'SPH Tech Hub Tee',
+        'description': 'For the builders and makers. A sleek minimal tee celebrating the SPH tech community.',
+        'price': '1250.00',
+        'stock': 20,
+        'category_slug': 't-shirts',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+    # Hoodies
+    {
+        'name': 'SPH Premium Hoodie',
+        'description': 'Stay warm in style. Our heavyweight hoodie is crafted from 80% cotton and 20% polyester fleece. Features a kangaroo pocket and embroidered SPH logo.',
+        'price': '3500.00',
+        'stock': 25,
+        'category_slug': 'hoodies',
+        'is_featured': True,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Zip-Up Hoodie',
+        'description': 'Versatile zip-up hoodie with the SPH emblem. Perfect for Mombasa evenings or air-conditioned offices.',
+        'price': '3800.00',
+        'stock': 15,
+        'category_slug': 'hoodies',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Lightweight Sweatshirt',
+        'description': 'A lighter take on the classic hoodie. Perfect for transitional weather. Crew-neck style with ribbed cuffs.',
+        'price': '2500.00',
+        'stock': 35,
+        'category_slug': 'hoodies',
+        'is_featured': True,
+        'is_new_arrival': False,
+    },
+    # Tote Bags
+    {
+        'name': 'SPH Canvas Tote Bag',
+        'description': 'Sturdy canvas tote bag with the SPH logo. Perfect for groceries, books, or beach trips. 100% organic cotton canvas.',
+        'price': '900.00',
+        'stock': 60,
+        'category_slug': 'tote-bags',
+        'is_featured': True,
+        'is_new_arrival': False,
+    },
+    {
+        'name': 'SPH Large Shopper Tote',
+        'description': 'Extra-large capacity tote for the go-getter. Reinforced handles and inner pocket. Features a bold SPH print.',
+        'price': '1200.00',
+        'stock': 40,
+        'category_slug': 'tote-bags',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Drawstring Bag',
+        'description': 'Lightweight drawstring gym bag. Ideal for workouts, beach days, or quick trips. Water-resistant nylon material.',
+        'price': '750.00',
+        'stock': 55,
+        'category_slug': 'tote-bags',
+        'is_featured': False,
+        'is_new_arrival': False,
+    },
+    # Caps
+    {
+        'name': 'SPH Embroidered Cap',
+        'description': 'Classic 6-panel cap with embroidered SPH logo. Adjustable strap for a perfect fit. Available in black and navy.',
+        'price': '1500.00',
+        'stock': 40,
+        'category_slug': 'caps-hats',
+        'is_featured': True,
+        'is_new_arrival': False,
+    },
+    {
+        'name': 'SPH Bucket Hat',
+        'description': 'Stay shaded in coastal style. A reversible bucket hat with SPH branding on both sides.',
+        'price': '1300.00',
+        'stock': 20,
+        'category_slug': 'caps-hats',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Beanie',
+        'description': 'Cosy knit beanie for cool evenings. Features a subtle embroidered SPH badge on the cuff.',
+        'price': '850.00',
+        'stock': 30,
+        'category_slug': 'caps-hats',
+        'is_featured': False,
+        'is_new_arrival': False,
+    },
+    # Accessories
+    {
+        'name': 'SPH Sticker Pack',
+        'description': 'A pack of 10 high-quality vinyl stickers featuring SPH logos, icons, and coastal motifs. Weatherproof and durable.',
+        'price': '350.00',
+        'stock': 100,
+        'category_slug': 'accessories',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Enamel Pin Set',
+        'description': 'Set of 3 collectible enamel pins. Each pin represents a different SPH community pillar: Tech, Art, and Music.',
+        'price': '600.00',
+        'stock': 75,
+        'category_slug': 'accessories',
+        'is_featured': True,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Wristband',
+        'description': 'Silicone wristband with the SPH motto engraved. A subtle way to show your community pride.',
+        'price': '250.00',
+        'stock': 120,
+        'category_slug': 'accessories',
+        'is_featured': False,
+        'is_new_arrival': False,
+    },
+    # Shoes
+    {
+        'name': 'SPH Canvas Sneakers',
+        'description': 'Classic canvas sneakers with the SPH logo on the tongue and heel. Vulcanized rubber sole. Unisex sizing.',
+        'price': '4500.00',
+        'stock': 15,
+        'category_slug': 'shoes',
+        'is_featured': True,
+        'is_new_arrival': True,
+    },
+    {
+        'name': 'SPH Slides',
+        'description': 'Comfortable EVA foam slides with the SPH wordmark embossed on the strap. Perfect for beach or casual use.',
+        'price': '1800.00',
+        'stock': 25,
+        'category_slug': 'shoes',
+        'is_featured': False,
+        'is_new_arrival': True,
+    },
+]
 
 
 class Command(BaseCommand):
-    help = 'Seed the database with sample products'
+    help = 'Seeds the database with SPH merchandise sample data'
 
-    def handle(self, *args, **kwargs):
-        self.stdout.write('Seeding data...')
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--flush',
+            action='store_true',
+            help='Delete all existing products and categories before seeding',
+        )
+
+    def handle(self, *args, **options):
+        if options['flush']:
+            self.stdout.write('Flushing existing products and categories...')
+            Product.objects.all().delete()
+            Category.objects.all().delete()
 
         # Create categories
-        categories_data = [
-            {'name': 'Apparel', 'slug': 'apparel', 'description': 'SPH branded clothing'},
-            {'name': 'Headwear', 'slug': 'headwear', 'description': 'SPH branded headwear'},
-            {'name': 'Bags', 'slug': 'bags', 'description': 'SPH branded bags'},
-            {'name': 'Drinkware', 'slug': 'drinkware', 'description': 'SPH branded drinkware'},
-            {'name': 'Stationery', 'slug': 'stationery', 'description': 'SPH branded stationery'},
-            {'name': 'Accessories', 'slug': 'accessories', 'description': 'SPH branded accessories'},
-        ]
-
-        categories = {}
-        for cat_data in categories_data:
+        self.stdout.write('Creating categories...')
+        category_map = {}
+        for cat_data in CATEGORIES:
             cat, created = Category.objects.get_or_create(
                 slug=cat_data['slug'],
-                defaults=cat_data
+                defaults={
+                    'name': cat_data['name'],
+                    'description': cat_data['description'],
+                }
             )
-            categories[cat_data['slug']] = cat
-            if created:
-                self.stdout.write(f'  Created category: {cat.name}')
+            category_map[cat_data['slug']] = cat
+            status = 'Created' if created else 'Already exists'
+            self.stdout.write(f'  {status}: {cat.name}')
 
         # Create products
-        products_data = [
-            {
-                'name': 'SPH Classic Hoodie',
-                'description': 'Stay warm and stylish with this classic hoodie. Made from premium fleece material featuring an embroidered logo on the chest. Perfect for cool evenings and casual wear.',
-                'price': 45.00,
-                'stock': 50,
-                'category': categories['apparel'],
-                'is_featured': True,
-                'is_new_arrival': False,
-            },
-            {
-                'name': 'SPH Premium Hoodie',
-                'description': 'Upgrade your wardrobe with this premium hoodie. Crafted from heavyweight cotton-polyester blend with a stylish kangaroo pocket and adjustable drawstring hood. Features large print on back.',
-                'price': 60.00,
-                'stock': 30,
-                'category': categories['apparel'],
-                'is_featured': True,
-                'is_new_arrival': True,
-            },
-            {
-                'name': 'SPH Classic T-Shirt',
-                'description': 'A wardrobe essential. This classic tee is made from 100% combed cotton, offering superior softness and durability. Available in multiple colors with the crest printed on the chest.',
-                'price': 20.00,
-                'stock': 100,
-                'category': categories['apparel'],
-                'is_featured': True,
-                'is_new_arrival': False,
-            },
-            {
-                'name': 'SPH Snapback Cap',
-                'description': 'Rep your school with the SPH Snapback Cap. Features a flat brim, structured crown, and embroidered SPH logo. Adjustable snapback closure fits all head sizes comfortably.',
-                'price': 18.00,
-                'stock': 75,
-                'category': categories['headwear'],
-                'is_featured': False,
-                'is_new_arrival': True,
-            },
-            {
-                'name': 'SPH Backpack',
-                'description': 'The ultimate daily companion. This spacious backpack features a padded laptop compartment, multiple organizer pockets, and water-resistant material. Ergonomic straps for all-day comfort.',
-                'price': 55.00,
-                'stock': 40,
-                'category': categories['bags'],
-                'is_featured': True,
-                'is_new_arrival': False,
-            },
-            {
-                'name': 'SPH Canvas Tote Bag',
-                'description': 'Eco-friendly and stylish. Made from heavy-duty canvas with reinforced handles. Perfect for shopping, books, or a day out. Features printed motto on the side.',
-                'price': 15.00,
-                'stock': 60,
-                'category': categories['bags'],
-                'is_featured': False,
-                'is_new_arrival': True,
-            },
-            {
-                'name': 'SPH Insulated Water Bottle',
-                'description': 'Stay hydrated in style with the SPH Insulated Water Bottle. Double-wall vacuum insulation keeps drinks cold for 24 hours or hot for 12 hours. BPA-free stainless steel with leak-proof lid.',
-                'price': 25.00,
-                'stock': 80,
-                'category': categories['drinkware'],
-                'is_featured': True,
-                'is_new_arrival': False,
-            },
-            {
-                'name': 'SPH Ceramic Mug',
-                'description': 'Start your morning right with the SPH Ceramic Mug. This premium 350ml ceramic mug features a comfortable handle and the SPH crest. Microwave and dishwasher safe.',
-                'price': 12.00,
-                'stock': 120,
-                'category': categories['drinkware'],
-                'is_featured': False,
-                'is_new_arrival': False,
-            },
-            {
-                'name': 'SPH Premium Notebook',
-                'description': 'Capture every idea with this premium notebook. Features 200 pages of acid-free paper, lay-flat binding, and a hardcover with the SPH emblem. Includes a ribbon bookmark and elastic closure.',
-                'price': 14.00,
-                'stock': 90,
-                'category': categories['stationery'],
-                'is_featured': False,
-                'is_new_arrival': True,
-            },
-            {
-                'name': 'SPH Sticker Pack',
-                'description': 'Personalize your laptop, water bottle, or notebook with the SPH Sticker Pack. Includes 10 premium vinyl stickers featuring various logos and designs. Waterproof and UV-resistant.',
-                'price': 8.00,
-                'stock': 200,
-                'category': categories['accessories'],
-                'is_featured': False,
-                'is_new_arrival': True,
-            },
-        ]
-
-        for product_data in products_data:
-            product, created = Product.objects.get_or_create(
-                name=product_data['name'],
-                defaults=product_data
+        self.stdout.write('Creating products...')
+        created_count = 0
+        for prod_data in PRODUCTS:
+            category = category_map.get(prod_data['category_slug'])
+            _, created = Product.objects.get_or_create(
+                name=prod_data['name'],
+                defaults={
+                    'description': prod_data['description'],
+                    'price': prod_data['price'],
+                    'stock': prod_data['stock'],
+                    'category': category,
+                    'is_featured': prod_data['is_featured'],
+                    'is_new_arrival': prod_data['is_new_arrival'],
+                }
             )
             if created:
-                self.stdout.write(f'  Created product: {product.name}')
-            else:
-                self.stdout.write(f'  Product already exists: {product.name}')
+                created_count += 1
+                self.stdout.write(f'  Created: {prod_data["name"]}')
 
-        self.stdout.write(self.style.SUCCESS('Seed data loaded successfully!'))
+        # Create superuser if not exists
+        if not User.objects.filter(username='admin').exists():
+            self.stdout.write('Creating superuser (admin / admin1234)...')
+            User.objects.create_superuser(
+                username='admin',
+                email='admin@swahilipot.org',
+                password='admin1234',
+                full_name='SPH Administrator',
+            )
+            self.stdout.write(self.style.SUCCESS('  Superuser created: admin / admin1234'))
+        else:
+            self.stdout.write('  Superuser "admin" already exists')
+
+        self.stdout.write(self.style.SUCCESS(
+            f'\n✅ Seeding complete: {len(CATEGORIES)} categories, {created_count} new products'
+        ))
+        

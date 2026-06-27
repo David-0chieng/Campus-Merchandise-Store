@@ -110,17 +110,32 @@
   gap: 10px;
 }
 
-/* ── Grids ──────────────────────────────────── */
+/* ── Categories Grid ────────────────────────── */
+/*
+  7 columns → row 1 shows 7 cards, row 2 shows the
+  remaining 4 (left-aligned). Cards are tall portrait
+  tiles; fixed height keeps both rows identical.
+*/
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 14px;
 }
 
+.categories-grid > * {
+  height: 180px;
+  min-height: 0;
+}
+
+/* ── Products Grid ──────────────────────────── */
+/*
+  Fixed 4-column layout for the 4 featured / new-arrival
+  cards — one clean row on desktop, never wraps oddly.
+*/
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 /* ── Promo Banner ───────────────────────────── */
@@ -192,7 +207,6 @@
   letter-spacing: 1px;
 }
 
-/* Visual decorative */
 .promo-banner__visual {
   position: relative;
   flex-shrink: 0;
@@ -383,6 +397,19 @@
 }
 
 /* ── Responsive ─────────────────────────────── */
+
+/* Large tablets */
+@media (max-width: 1100px) {
+  .categories-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets */
 @media (max-width: 960px) {
   .trust-bar__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -395,6 +422,10 @@
   .trust-badge:nth-child(1),
   .trust-badge:nth-child(2) {
     border-bottom: 1px solid var(--border);
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .lifestyle-banner__inner {
@@ -413,25 +444,32 @@
   }
 }
 
+/* Small tablets */
 @media (max-width: 768px) {
   .home-section {
     padding: 56px 0;
+  }
+
+  .home-section__header {
+    margin-bottom: 28px;
   }
 
   .promo-banner__visual {
     display: none;
   }
 
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
   .categories-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
   }
 }
 
+/* Mobile */
 @media (max-width: 480px) {
   .trust-bar__grid {
     grid-template-columns: 1fr;
@@ -448,10 +486,12 @@
 
   .categories-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .products-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
   .lifestyle-banner__images {

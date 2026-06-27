@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { FiUser, FiPackage, FiSettings, FiEdit3, FiSave } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { authService, orderService } from '../services/api';
@@ -16,7 +17,8 @@ const STATUS_COLORS = {
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
-  const [tab, setTab] = useState('info');
+  const [searchParams] = useSearchParams();
+  const [tab, setTab] = useState(() => searchParams.get('tab') || 'info');
   const [orders, setOrders] = useState([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [editing, setEditing] = useState(false);

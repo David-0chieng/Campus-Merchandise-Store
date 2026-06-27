@@ -3,9 +3,14 @@ from .models import Product, Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    product_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ('id', 'name', 'slug', 'description')
+        fields = ('id', 'name', 'slug', 'description', 'product_count')
+
+    def get_product_count(self, obj):
+        return obj.products.count()
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -33,7 +38,10 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'price', 'image_url', 'stock', 'category', 'category_name', 'is_featured', 'is_new_arrival')
+        fields = (
+            'id', 'name', 'price', 'image_url', 'stock',
+            'category', 'category_name', 'is_featured', 'is_new_arrival'
+        )
 
     def get_image_url(self, obj):
         request = self.context.get('request')

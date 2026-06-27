@@ -1,0 +1,67 @@
+.als-wrap {
+  width: 100%;
+  padding: 8px 0;
+}
+
+.als-inner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8f6f2, #f0ede8);
+  padding: 24px;
+  min-height: 300px;
+}
+
+.als-icon-wrap {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.als-icon {
+  background: rgba(201,168,76,0.15);
+  padding: 10px;
+  border-radius: 50%;
+  color: #c9a84c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.als-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) { .als-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .als-grid { grid-template-columns: 1fr; } }
+
+.als-card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.als-card-img {
+  height: 160px;
+  background: #f3f4f6;
+}
+
+.als-card-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.als-line {
+  border-radius: 6px;
+  height: 12px;
+  background: #f3f4f6;
+}
+
+.als-line--lg { width: 75%; }
+.als-line--md { width: 55%; }
+.als-line--sm { width: 40%; height: 10px; }

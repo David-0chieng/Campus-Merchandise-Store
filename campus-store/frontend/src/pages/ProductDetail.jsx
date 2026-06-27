@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FiShoppingBag, FiArrowLeft, FiPackage, FiTag } from 'react-icons/fi';
+import { FiShoppingBag, FiArrowLeft, FiPackage, FiTag, FiHeart } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import QuantitySelector from '../components/QuantitySelector';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { productService } from '../services/api';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import './ProductDetail.css';
 
 const PLACEHOLDER = 'https://placehold.co/600x700/1a1a2e/c9a84c?text=SPH';
@@ -14,6 +15,7 @@ const PLACEHOLDER = 'https://placehold.co/600x700/1a1a2e/c9a84c?text=SPH';
 const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -111,6 +113,13 @@ const ProductDetail = () => {
               >
                 <FiShoppingBag size={17} />
                 {product.stock === 0 ? 'Out of Stock' : added ? 'Added!' : 'Add to Cart'}
+              </button>
+              <button
+                className={`product-detail__wishlist-btn ${isWishlisted(product.id) ? 'product-detail__wishlist-btn--active' : ''}`}
+                onClick={() => toggleWishlist(product)}
+                aria-label={isWishlisted(product.id) ? 'Remove from wishlist' : 'Save to wishlist'}
+              >
+                <FiHeart size={18} />
               </button>
             </div>
 

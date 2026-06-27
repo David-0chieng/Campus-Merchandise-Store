@@ -59,23 +59,6 @@ const HeroBanner = () => (
 
       {/* Right — floating product cards */}
       <div className="hero__right">
-        <div className="hero__card-stack">
-          <div className="hero__card hero__card--back">
-            <div className="hero__card-img hero__card-img--2" />
-            <div className="hero__card-info">
-              <span>SPH Backpack</span>
-              <strong>KSh 4,200</strong>
-            </div>
-          </div>
-          <div className="hero__card hero__card--front">
-            <div className="hero__card-img hero__card-img--1" />
-            <div className="hero__card-tag">🔥 Best Seller</div>
-            <div className="hero__card-info">
-              <span>SPH Classic Hoodie</span>
-              <strong>KSh 3,500</strong>
-            </div>
-          </div>
-        </div>
 
         {/* Floating stats bubbles */}
         <div className="hero__bubble hero__bubble--top">

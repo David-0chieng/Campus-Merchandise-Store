@@ -134,6 +134,32 @@
   font-size: 0.95rem;
 }
 
+.product-detail__wishlist-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  color: var(--gray);
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.product-detail__wishlist-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(201,168,76,0.08);
+}
+
+.product-detail__wishlist-btn--active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(201,168,76,0.12);
+}
+
 .product-detail__meta {
   border-top: 1px solid var(--border);
   padding-top: 20px;

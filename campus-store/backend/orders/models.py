@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from products.models import Product
-
+from decimal import Decimal
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -12,8 +12,12 @@ class Order(models.Model):
         ('cancelled', 'Cancelled'),
     ]
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
-    student_id = models.CharField(max_length=20)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
+    student_id = models.CharField(max_length=20, blank=True)
     full_name = models.CharField(max_length=150)
     email = models.EmailField()
     phone_number = models.CharField(max_length=20)
@@ -28,7 +32,7 @@ class Order(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"Order #{self.id} - {self.user.username}"
+        return f"Order #{self.id} — {self.user.username}"
 
 
 class OrderItem(models.Model):
@@ -38,8 +42,8 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.quantity}x {self.product.name}"
+        return f"{self.quantity}× {self.product.name}"
 
     @property
     def subtotal(self):
-        return self.price * self.quantity
+        return (self.price or Decimal('0.00')) * self.quantity

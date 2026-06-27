@@ -1,6 +1,5 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -18,6 +17,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'email': self.user.email,
             'full_name': self.user.full_name,
             'student_id': self.user.student_id,
+            'phone_number': self.user.phone_number,
+            'delivery_location': self.user.delivery_location,
         }
         return data
 
@@ -50,6 +51,7 @@ class RegisterView(generics.CreateAPIView):
 class ProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = UserProfileSerializer
+    http_method_names = ['get', 'patch', 'put']
 
     def get_object(self):
         return self.request.user

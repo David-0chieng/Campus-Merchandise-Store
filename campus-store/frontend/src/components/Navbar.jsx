@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { ShoppingBag, User, Menu, X, Search, LogOut, ChevronDown } from 'lucide-react';
+import { ShoppingBag, User, Menu, X, Search, LogOut, ChevronDown, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../context/WishlistContext';
 import SphLogo from './SphLogo';
+import toast from 'react-hot-toast';
 import './Navbar.css';
 
 const NAV_CATEGORIES = [
@@ -22,30 +24,41 @@ const Navbar = () => {
   const [shopOpen, setShopOpen] = useState(false);
   const shopRef = useRef(null);
   const { cartCount } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const handleResize = () => { if (window.innerWidth > 960) setMenuOpen(false); };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
-  // Close shop dropdown on outside click
   useEffect(() => {
     const handleClick = (e) => {
-      if (shopRef.current && !shopRef.current.contains(e.target)) {
-        setShopOpen(false);
-      }
+      if (shopRef.current && !shopRef.current.contains(e.target)) setShopOpen(false);
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => { setMenuOpen(false); }, [navigate]);
+
+  // Restore body scroll on unmount (safety net)
+  useEffect(() => {
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery('');
     }
@@ -53,6 +66,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    toast.success('Logged out successfully');
     navigate('/');
     setMenuOpen(false);
   };
@@ -78,9 +92,7 @@ const Navbar = () => {
         {/* Desktop nav links */}
         <ul className="navbar__links">
           <li>
-            <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
-              Home
-            </NavLink>
+            <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink>
           </li>
 
           {/* Shop dropdown */}
@@ -94,12 +106,8 @@ const Navbar = () => {
             {shopOpen && (
               <div className="navbar__dropdown">
                 {NAV_CATEGORIES.map((cat) => (
-                  <Link
-                    key={cat.to}
-                    to={cat.to}
-                    className="navbar__dropdown-item"
-                    onClick={() => setShopOpen(false)}
-                  >
+                  <Link key={cat.to} to={cat.to} className="navbar__dropdown-item"
+                    onClick={() => setShopOpen(false)}>
                     {cat.label}
                   </Link>
                 ))}
@@ -122,16 +130,22 @@ const Navbar = () => {
         {/* Actions */}
         <div className="navbar__actions">
           {/* Search */}
-          <button
-            className="navbar__icon-btn"
-            onClick={() => setSearchOpen(!searchOpen)}
-            aria-label="Search"
-          >
+          <button className="navbar__icon-btn" onClick={() => setSearchOpen(!searchOpen)} aria-label="Search">
             <Search size={19} />
           </button>
 
+          {/* Wishlist */}
+          <Link to="/wishlist" className="navbar__icon-btn" aria-label="Wishlist">
+            <Heart size={19} />
+            {wishlistCount > 0 && (
+              <span className="navbar__cart-badge navbar__cart-badge--wish">
+                {wishlistCount > 9 ? '9+' : wishlistCount}
+              </span>
+            )}
+          </Link>
+
           {/* Cart */}
-          <Link to="/cart" className="navbar__icon-btn navbar__cart-btn" aria-label="Cart">
+          <Link to="/cart" className="navbar__icon-btn" aria-label="Cart">
             <ShoppingBag size={19} />
             {cartCount > 0 && (
               <span className="navbar__cart-badge">{cartCount > 9 ? '9+' : cartCount}</span>
@@ -149,17 +163,11 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link to="/login" className="navbar__login-btn">
-              Sign In
-            </Link>
+            <Link to="/login" className="navbar__login-btn">Sign In</Link>
           )}
 
           {/* Mobile menu toggle */}
-          <button
-            className="navbar__icon-btn navbar__menu-toggle"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
+          <button className="navbar__icon-btn navbar__menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
@@ -190,34 +198,55 @@ const Navbar = () => {
       {menuOpen && (
         <div className="navbar__mobile-menu">
           <div className="navbar__mobile-links">
+
+            {/* Primary links */}
             <NavLink to="/" end onClick={() => setMenuOpen(false)}>Home</NavLink>
+
+            {/* Shop section — grouped card */}
             <div className="navbar__mobile-section">
               <span className="navbar__mobile-section-title">Shop</span>
               {NAV_CATEGORIES.map((cat) => (
-                <Link key={cat.to} to={cat.to} onClick={() => setMenuOpen(false)}>
-                  {cat.label}
-                </Link>
+                <Link key={cat.to} to={cat.to} onClick={() => setMenuOpen(false)}>{cat.label}</Link>
               ))}
             </div>
+
             <NavLink to="/products?is_new_arrival=true" onClick={() => setMenuOpen(false)}>New Arrivals</NavLink>
             <NavLink to="/products?is_featured=true" onClick={() => setMenuOpen(false)}>Featured</NavLink>
+
             <div className="navbar__mobile-divider" />
+
+            {/* Wishlist + Cart as side-by-side pill buttons */}
+            <div className="navbar__mobile-icon-row">
+              <Link to="/wishlist" onClick={() => setMenuOpen(false)}>
+                <Heart size={15} /> Wishlist
+                {wishlistCount > 0 && <span className="navbar__mobile-badge">{wishlistCount}</span>}
+              </Link>
+              <Link to="/cart" onClick={() => setMenuOpen(false)}>
+                <ShoppingBag size={15} /> Cart
+                {cartCount > 0 && <span className="navbar__mobile-badge">{cartCount}</span>}
+              </Link>
+            </div>
+
+            <div className="navbar__mobile-divider" />
+
+            {/* Auth */}
             {user ? (
-              <>
-                <Link to="/profile" onClick={() => setMenuOpen(false)}>My Profile</Link>
-                <Link to="/cart" onClick={() => setMenuOpen(false)}>
-                  Cart {cartCount > 0 && <span className="navbar__mobile-badge">{cartCount}</span>}
+              <div className="navbar__mobile-auth">
+                <Link to="/profile" onClick={() => setMenuOpen(false)} className="navbar__mobile-signin">
+                  <User size={15} style={{ marginRight: 8 }} /> My Profile
                 </Link>
                 <button onClick={handleLogout} className="navbar__mobile-logout">Sign Out</button>
-              </>
+              </div>
             ) : (
-              <>
-                <Link to="/login" onClick={() => setMenuOpen(false)}>Sign In</Link>
+              <div className="navbar__mobile-auth">
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="navbar__mobile-signin">Sign In</Link>
                 <Link to="/register" onClick={() => setMenuOpen(false)} className="navbar__mobile-register">Create Account</Link>
-              </>
+              </div>
             )}
+
           </div>
         </div>
+      
       )}
     </header>
   );

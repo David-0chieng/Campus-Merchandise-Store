@@ -4,45 +4,70 @@ import { authService } from '../services/api';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const loadUser = useCallback(async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token) { setLoading(false); return; }
+  const [user, setUser] = useState(() => {
     try {
-      const { data } = await authService.getProfile();
-      setUser(data);
+      const stored = localStorage.getItem('sph_user');
+      return stored ? JSON.parse(stored) : null;
     } catch {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-    } finally {
-      setLoading(false);
+      return null;
     }
+  });
+  const [loading, setLoading] = useState(true); // initial auth check
+
+  // On mount: if we have tokens but no user, fetch profile
+  useEffect(() => {
+    const bootstrap = async () => {
+      const access = localStorage.getItem('access_token');
+      if (access && !user) {
+        try {
+          const { data } = await authService.getProfile();
+          setUser(data);
+          localStorage.setItem('sph_user', JSON.stringify(data));
+        } catch {
+          // token invalid / expired and refresh also failed → interceptor handles logout
+        }
+      }
+      setLoading(false);
+    };
+    bootstrap();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { loadUser(); }, [loadUser]);
-
-  const login = async (credentials) => {
+  const login = useCallback(async (credentials) => {
     const { data } = await authService.login(credentials);
     localStorage.setItem('access_token', data.access);
     localStorage.setItem('refresh_token', data.refresh);
-    setUser(data.user);
+    const userData = data.user || { username: credentials.username };
+    setUser(userData);
+    localStorage.setItem('sph_user', JSON.stringify(userData));
+    // Fetch full profile to get phone_number, delivery_location etc.
+    try {
+      const { data: profile } = await authService.getProfile();
+      setUser(profile);
+      localStorage.setItem('sph_user', JSON.stringify(profile));
+    } catch {
+      // fallback to login response user
+    }
     return data;
-  };
+  }, []);
 
-  const register = async (userData) => {
-    const { data } = await authService.register(userData);
+  const register = useCallback(async (formData) => {
+    const { data } = await authService.register(formData);
     return data;
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('sph_user');
     setUser(null);
-  };
+  }, []);
 
-  const updateUser = (updatedData) => setUser((prev) => ({ ...prev, ...updatedData }));
+  const updateUser = useCallback((newData) => {
+    const merged = { ...user, ...newData };
+    setUser(merged);
+    localStorage.setItem('sph_user', JSON.stringify(merged));
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>

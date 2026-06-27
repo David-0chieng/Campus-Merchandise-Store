@@ -35,6 +35,7 @@ const Checkout = () => {
     try {
       const payload = {
         ...form,
+        student_id: user?.student_id || '',
         items: cartItems.map((i) => ({ product: i.id, quantity: i.quantity })),
       };
       const { data } = await orderService.create(payload);

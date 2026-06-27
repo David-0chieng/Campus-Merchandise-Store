@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Order, OrderItem
-from products.serializers import ProductListSerializer
+from products.models import Product
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderCreateSerializer(serializers.Serializer):
-    student_id = serializers.CharField(max_length=20)
+    student_id = serializers.CharField(max_length=20, required=False, allow_blank=True, default='')
     full_name = serializers.CharField(max_length=150)
     email = serializers.EmailField()
     phone_number = serializers.CharField(max_length=20)

@@ -4,7 +4,7 @@ from django.db import transaction
 from .models import Order, OrderItem
 from .serializers import OrderSerializer, OrderCreateSerializer
 from products.models import Product
-
+from decimal import Decimal
 
 class OrderListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -22,21 +22,21 @@ class OrderListCreateView(generics.ListCreateAPIView):
         data = serializer.validated_data
 
         with transaction.atomic():
-            total_price = 0
+            total_price = Decimal('0.00')
             order_items_data = []
 
             for item_data in data['items']:
                 try:
-                    product = Product.objects.get(id=item_data['product'])
+                    product = Product.objects.select_for_update().get(id=item_data['product'])
                 except Product.DoesNotExist:
                     return Response(
-                        {'error': f"Product {item_data['product']} not found."},
+                        {'error': f"Product with id {item_data['product']} not found."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
                 if product.stock < item_data['quantity']:
                     return Response(
-                        {'error': f"Insufficient stock for {product.name}."},
+                        {'error': f"Insufficient stock for '{product.name}'. Only {product.stock} left."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
@@ -48,10 +48,10 @@ class OrderListCreateView(generics.ListCreateAPIView):
                     'price': product.price,
                 })
 
-            delivery_fee = 5.00
+            delivery_fee = Decimal('5.00')
             order = Order.objects.create(
                 user=request.user,
-                student_id=data['student_id'],
+                student_id=data.get('student_id', '') or getattr(request.user, 'student_id', '') or '',
                 full_name=data['full_name'],
                 email=data['email'],
                 phone_number=data['phone_number'],
@@ -67,9 +67,8 @@ class OrderListCreateView(generics.ListCreateAPIView):
                     quantity=item_data['quantity'],
                     price=item_data['price'],
                 )
-                # Deduct stock
                 item_data['product'].stock -= item_data['quantity']
-                item_data['product'].save()
+                item_data['product'].save(update_fields=['stock'])
 
         response_serializer = OrderSerializer(order, context={'request': request})
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
